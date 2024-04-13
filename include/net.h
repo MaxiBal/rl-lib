@@ -1,7 +1,6 @@
 #ifndef NET_H
 #define NET_H
 
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
