@@ -195,6 +195,16 @@ void test_network_with_XOR_data()
     }
 
     free_network(&net);
+
+    float** xor_truth_table_inputs = (float**) malloc(training_data_n * sizeof(float*));
+    for(size_t i=0; i<training_data_n; i++)
+    {
+        free(xor_truth_table_inputs[i]);
+        free(xor_truth_table_labels[i]);
+    }
+
+    free(xor_truth_table_inputs);
+    free(xor_truth_table_labels);
 }
 
 int main()
