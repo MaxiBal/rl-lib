@@ -47,6 +47,7 @@ struct layer_t
 struct network_t
 {
     size_t n;
+    float learning_rate;
     struct layer_t* layers;
 };
 
@@ -75,7 +76,7 @@ void free_layer     (struct layer_t* layer);
 void free_network   (struct network_t* network);
 
 
-void feed_input(struct layer_t* input_layer, float** data, size_t n);
+void feed_input(struct layer_t* input_layer, float* data);
 
 float compute_cost(struct layer_t* output_layer, float** labels, size_t n, size_t n_data);
 
@@ -90,6 +91,10 @@ static void backpropogate_hidden_layers(struct layer_t* layers, size_t end_layer
 /// @param label_n size of ```labels```
 void back_propogate(struct network_t* network, float** labels, size_t label_n);
 
-void update_weights(struct network_t* network, float learning_rate);
+void update_weights(struct network_t* network);
+
+void train_model(struct network_t* network, float** training_data, float** labels, size_t data_size, size_t epochs);
+
+void feed(struct network_t* network, float* data);
 
 #endif

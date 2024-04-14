@@ -66,6 +66,7 @@ void initialize_network (struct network_t* network, size_t* layer_sizes, size_t 
 {
     network->n = num_of_layers;
     network->layers = (struct layer_t*) malloc(num_of_layers * sizeof(struct layer_t));
+    network->learning_rate = 0.15;
 
     initialize_layer(&network->layers[0], layer_sizes[0], layer_sizes[1], true);
 
@@ -102,11 +103,11 @@ void free_network   (struct network_t* network)
 
 // Neural network functions
 
-void feed_input(struct layer_t* input_layer, float** data, size_t n)
+void feed_input(struct layer_t* input_layer, float* data)
 {
     for (size_t i = 0; i < input_layer->n; i++)
     {
-        input_layer->neurons[i].actv = data[n][i];
+        input_layer->neurons[i].actv = data[i];
     }
 }
 
@@ -207,7 +208,7 @@ static void backpropogate_hidden_layers(struct layer_t* layers, size_t end_layer
     }
 }
 
-void update_weights(struct network_t* network, float learning_rate)
+void update_weights(struct network_t* network)
 {
     struct layer_t* layers = network->layers;
     for (size_t l = 0; l < network->n - 1; l++)
@@ -217,12 +218,12 @@ void update_weights(struct network_t* network, float learning_rate)
             for (size_t k = 0; k < layers[l+1].n; k++)
             {
                 layers[l].neurons[n].out_weights[k] = 
-                    layers[l].neurons[n].out_weights[k] - (learning_rate * layers[l].neurons[n].dw[k]);
+                    layers[l].neurons[n].out_weights[k] - (network->learning_rate * layers[l].neurons[n].dw[k]);
             }
 
             // update bias
 
-            layers[l].neurons[n].bias = layers[l].neurons[n].bias - (learning_rate * layers[l].neurons[n].dbias);
+            layers[l].neurons[n].bias = layers[l].neurons[n].bias - (network->learning_rate * layers[l].neurons[n].dbias);
         }
     }
 }
@@ -237,4 +238,25 @@ float compute_cost(struct layer_t* output_layer, float** labels, size_t n, size_
     }
 
     return cost;
+}
+
+void train_model(struct network_t* network, float** training_data, float** labels, size_t data_size, size_t epochs)
+{
+    for (size_t epoch = 0; epoch < epochs; epoch++)
+    {
+        for (size_t n = 0; n < data_size; n++)
+        {
+            feed_input(&network->layers[0], training_data[n]);
+            forward_propogate(network);
+            compute_cost(&network->layers[network->n - 1], labels, network->layers[network->n - 1].n, n);
+            back_propogate(network, labels, n);
+            update_weights(network);
+        }
+    }
+}
+
+void feed(struct network_t* network, float* data)
+{
+    feed_input(&network->layers[0], data);
+    forward_propogate(network);
 }
