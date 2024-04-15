@@ -73,7 +73,7 @@ void test_network_with_XOR_data()
         
         for (size_t out = 0; out < net.layers[net.n - 1].n; out++)
         {
-            printf("%ld: %d\n", out, net.layers[net.n - 1].neurons[out].actv > 0.500);
+            printf("%ld: %f\n", out, net.layers[net.n - 1].neurons[out].actv);
         }
 
     }

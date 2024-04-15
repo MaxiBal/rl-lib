@@ -25,3 +25,7 @@ add_test(NAME LSRL COMMAND LSRL)
 add_executable(XORNetwork tests/xor_network.c)
 target_link_libraries(XORNetwork LINK_PUBLIC RLLib)
 add_test(NAME XORNetwork COMMAND XORNetwork)
+
+add_executable(MNIST tests/mnist.c)
+target_link_libraries(MNIST LINK_PUBLIC RLLib)
+add_test(NAME MNIST COMMAND MNIST)

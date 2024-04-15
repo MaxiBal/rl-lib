@@ -30,6 +30,7 @@ static void initialize_neuron_weights(struct neuron_t* neuron, size_t out_weight
     for (size_t i = 0; i < out_weights; i++)
     {
         neuron->out_weights[i] = ((float) rand()) / ((float) RAND_MAX);
+        printf("%f\n", neuron->out_weights[i]);
         neuron->dw[i] = 0.0;
     }
 
@@ -168,7 +169,7 @@ static void backpropogate_output_layer(struct layer_t* layers, const size_t outp
     for (size_t n = 0; n < layers[output_layer_n].n; n++)
     {
         
-        layers[output_layer_n].neurons[n].dz = 
+        layers[output_layer_n].neurons[n].dz =
             (layers[output_layer_n].neurons[n].actv - labels[label_n][n]) * d_sigmoid(layers[output_layer_n].neurons[n].actv);
 
         for (size_t k = 0; k < layers[output_layer_n - 1].n; k++)
@@ -217,8 +218,7 @@ void update_weights(struct network_t* network)
         {
             for (size_t k = 0; k < layers[l+1].n; k++)
             {
-                layers[l].neurons[n].out_weights[k] = 
-                    layers[l].neurons[n].out_weights[k] - (network->learning_rate * layers[l].neurons[n].dw[k]);
+                layers[l].neurons[n].out_weights[k] -= (network->learning_rate * layers[l].neurons[n].dw[k]);
             }
 
             // update bias
